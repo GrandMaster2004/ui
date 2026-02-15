@@ -1508,14 +1508,15 @@ body {
 
 .admin-panel__content {
   height: auto;
-  overflow-y: visible;
-  overflow-x: visible;
+  overflow: visible;
 }
 
 .admin-panel .ng-table-wrapper {
   height: auto;
   max-height: none;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-panel h2 {
@@ -1951,10 +1952,7 @@ body {
 }
 
 .admin-status-dropdown__menu {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  width: 100%;
+  /* position set inline via JS (fixed) */
   background: rgba(255, 255, 255, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
@@ -1962,7 +1960,7 @@ body {
     0 12px 32px rgba(0, 0, 0, 0.15),
     0 2px 8px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  z-index: calc(var(--z-modal) + 1);
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1973,7 +1971,7 @@ body {
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* When dropdown opens upward */
+/* Legacy open-up class - direction now handled by inline styles */
 .admin-status-dropdown--open-up .admin-status-dropdown__menu {
   top: auto;
   bottom: calc(100% + 0.5rem);
