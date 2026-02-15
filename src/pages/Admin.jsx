@@ -7,7 +7,6 @@ import {
   createContext,
   useContext,
 } from "react";
-import ReactDOM from "react-dom";
 import { Button, Card, Select, LoadingSkeleton } from "../components/UI.jsx";
 import { Header, Container } from "../layouts/MainLayout.jsx";
 import { LandingFooter } from "../components/LandingChrome.jsx";
@@ -155,23 +154,16 @@ const StatusSelectDropdown = ({
         const buttonElement = dropdownRef.current?.querySelector(
           ".admin-status-dropdown__button",
         );
-        const sectionRect = sectionRef?.current?.getBoundingClientRect();
-        const fallbackRect = dropdownRef.current?.getBoundingClientRect();
-        const bounds = sectionRect || fallbackRect;
-
-        if (buttonElement && bounds) {
+        if (buttonElement) {
           const rect = buttonElement.getBoundingClientRect();
-          const spaceBelow = bounds.bottom - rect.bottom;
-          const spaceAbove = rect.top - bounds.top;
-          // If space below < 260px AND space above > 260px, open upward
-          // Otherwise open downward
+          const spaceBelow = window.innerHeight - rect.bottom;
+          const spaceAbove = rect.top;
           setShouldOpenUp(spaceBelow < 260 && spaceAbove > 260);
         }
       };
-      // Small delay to allow dropdown to render
       setTimeout(checkSpace, 0);
     }
-  }, [isThisOpen, sectionRef]);
+  }, [isThisOpen]);
 
   const handleSelect = (optionValue) => {
     onChange({ target: { value: optionValue } });
@@ -191,45 +183,10 @@ const StatusSelectDropdown = ({
     }
   };
 
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const menuRef = useRef(null);
-
-  // Function to update menu position
-  const updateMenuPosition = useCallback(() => {
-    if (isThisOpen && dropdownRef.current) {
-      const buttonRect = dropdownRef.current.getBoundingClientRect();
-      setMenuPosition({
-        top: buttonRect.bottom + 8,
-        left: buttonRect.left,
-        width: buttonRect.width,
-      });
-    }
-  }, [isThisOpen]);
-
-  useEffect(() => {
-    updateMenuPosition();
-  }, [isThisOpen, updateMenuPosition]);
-
-  // Update position on scroll and resize
-  useEffect(() => {
-    if (!isThisOpen) return;
-
-    const handleScroll = () => updateMenuPosition();
-    const handleResize = () => updateMenuPosition();
-
-    // Use capture phase to catch scroll events from all elements
-    window.addEventListener("scroll", handleScroll, true);
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll, true);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [isThisOpen, updateMenuPosition]);
-
+  // Click outside handler
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target) && menuRef.current && !menuRef.current.contains(e.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpenDropdown(null);
         onOpenChange?.(false);
       }
@@ -239,7 +196,7 @@ const StatusSelectDropdown = ({
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [isThisOpen, onOpenChange]);
+  }, [isThisOpen, onOpenChange, setOpenDropdown]);
 
   return (
     <div
@@ -266,40 +223,29 @@ const StatusSelectDropdown = ({
         </span>
       </button>
 
-      {isThisOpen && typeof document !== "undefined" &&
-        ReactDOM.createPortal(
-          <div
-            ref={menuRef}
-            className="admin-status-dropdown__menu"
-            style={{
-              position: "fixed",
-              top: `${menuPosition.top}px`,
-              left: `${menuPosition.left}px`,
-              width: `${menuPosition.width}px`,
-            }}
-          >
-            {options.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => handleSelect(opt.value)}
-                className={`admin-status-dropdown__item ${
-                  value === opt.value
-                    ? "admin-status-dropdown__item--selected"
-                    : ""
-                }`}
-              >
-                <span className="admin-status-dropdown__item-text">
-                  {opt.label}
-                </span>
-                {value === opt.value && (
-                  <span className="admin-status-dropdown__item-checkmark">✓</span>
-                )}
-              </button>
-            ))}
-          </div>,
-          document.body
-        )}
+      {isThisOpen && (
+        <div className="admin-status-dropdown__menu">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleSelect(opt.value)}
+              className={`admin-status-dropdown__item ${
+                value === opt.value
+                  ? "admin-status-dropdown__item--selected"
+                  : ""
+              }`}
+            >
+              <span className="admin-status-dropdown__item-text">
+                {opt.label}
+              </span>
+              {value === opt.value && (
+                <span className="admin-status-dropdown__item-checkmark">✓</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

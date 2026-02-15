@@ -1515,7 +1515,7 @@ body {
 .admin-panel .ng-table-wrapper {
   height: auto;
   max-height: none;
-  overflow-y: hidden;
+  overflow: visible;
 }
 
 .admin-panel h2 {
@@ -1951,7 +1951,10 @@ body {
 }
 
 .admin-status-dropdown__menu {
-  position: fixed;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
   background: rgba(255, 255, 255, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
@@ -1968,8 +1971,6 @@ body {
   animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* Ensure menu renders on top of everything including dropdowns */
-  pointer-events: auto;
 }
 
 /* When dropdown opens upward */
