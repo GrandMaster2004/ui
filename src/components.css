@@ -478,13 +478,17 @@ input[type="password"]::-webkit-password-reveal-icon {
   display: flex;
   flex-direction: column;
   width: 100%;
+  flex: 1;
 }
 
 .landing__page-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   animation: fadeInUp 0.4s ease both;
   background: var(--color-dark);
   width: 100%;
+  min-height: 0;
 }
 
 .landing__hero {
@@ -1479,6 +1483,42 @@ input[type="password"]::-webkit-password-reveal-icon {
 .landing__join-header {
   text-align: center;
   margin-bottom: 3rem;
+}
+
+.landing__join-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+}
+
+@media (max-width: 767px) {
+  .landing__join-header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.landing__join-header-image {
+  width: clamp(120px, 18vw, 220px);
+  height: auto;
+  border-radius: 1rem;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+  animation: joinImageFadeIn 0.8s ease-out both;
+  animation-delay: 0.2s;
+}
+
+@keyframes joinImageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .landing__join-title {

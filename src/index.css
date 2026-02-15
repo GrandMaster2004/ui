@@ -75,22 +75,37 @@ textarea {
   color: var(--color-dark);
 }
 
+/* Modern scrollbar - Chrome / Edge / Safari */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: rgba(20, 20, 30, 0.4);
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-accent);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--color-accent) 0%, rgba(154, 230, 0, 0.6) 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-strong);
+  background: linear-gradient(180deg, var(--color-accent-strong) 0%, var(--color-accent) 100%);
+  box-shadow: 0 0 8px rgba(176, 255, 0, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Modern scrollbar - Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) rgba(20, 20, 30, 0.4);
 }
 
 .ng-loading-screen {
