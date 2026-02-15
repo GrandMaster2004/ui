@@ -148,23 +148,6 @@ const StatusSelectDropdown = ({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdown(null);
-        onOpenChange?.(false);
-        setShouldOpenUp(false);
-      }
-    };
-
-    if (isThisOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [isThisOpen, setOpenDropdown, onOpenChange]);
-
   // Detect available space and determine if dropdown should open upward
   useEffect(() => {
     if (isThisOpen && dropdownRef.current) {
