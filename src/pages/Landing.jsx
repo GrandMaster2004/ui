@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const TicketCard = ({ color, children, className = "" }) => {
@@ -371,7 +371,15 @@ export const LandingPage = () => {
 
       <div className="landing__join">
         <div className="landing__join-header">
-          <h2 className="landing__join-title">JOIN THE CIRCLE.</h2>
+          <div className="landing__join-header-content">
+            {/* <img
+              src="/chatgpt.png"
+              alt="Join the circle community"
+              className="landing__join-header-image"
+              loading="lazy"
+            /> */}
+            <h2 className="landing__join-title">JOIN THE CIRCLE.</h2>
+          </div>
         </div>
 
         <div className="landing__join-inner">

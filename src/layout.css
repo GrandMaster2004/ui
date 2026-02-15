@@ -126,15 +126,35 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease;
 }
 
-.dashboard-page .ng-card:hover,
-.admin-page .ng-card:hover {
-  box-shadow:
-    0 16px 36px rgba(90, 96, 120, 0.2),
-    0 0 22px rgba(255, 255, 255, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  border-color: rgba(255, 255, 255, 0.6);
+/* Premium hover effect - desktop only */
+@media (hover: hover) and (min-width: 769px) {
+  .dashboard-page .ng-card:hover,
+  .admin-page .ng-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+      0 20px 44px rgba(90, 96, 120, 0.22),
+      0 0 28px rgba(255, 255, 255, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.65);
+  }
+}
+
+/* Disable hover transform on touch devices */
+@media (hover: none) {
+  .dashboard-page .ng-card:hover,
+  .admin-page .ng-card:hover {
+    transform: none;
+    box-shadow:
+      0 10px 28px rgba(90, 96, 120, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
 }
 
 .admin-page .admin-panel h2,
@@ -1488,14 +1508,15 @@ body {
 
 .admin-panel__content {
   height: auto;
-  overflow-y: visible;
-  overflow-x: visible;
+  overflow: visible;
 }
 
 .admin-panel .ng-table-wrapper {
   height: auto;
   max-height: none;
-  overflow-y: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-panel h2 {
@@ -1931,7 +1952,7 @@ body {
 }
 
 .admin-status-dropdown__menu {
-  position: fixed;
+  /* position set inline via JS (fixed) */
   background: rgba(255, 255, 255, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
@@ -1939,7 +1960,7 @@ body {
     0 12px 32px rgba(0, 0, 0, 0.15),
     0 2px 8px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  z-index: calc(var(--z-modal) + 1);
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1948,11 +1969,9 @@ body {
   animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* Ensure menu renders on top of everything including dropdowns */
-  pointer-events: auto;
 }
 
-/* When dropdown opens upward */
+/* Legacy open-up class - direction now handled by inline styles */
 .admin-status-dropdown--open-up .admin-status-dropdown__menu {
   top: auto;
   bottom: calc(100% + 0.5rem);
@@ -3403,10 +3422,10 @@ body {
 /* Auth */
 .auth-section {
   width: 100%;
-  min-height: 100vh;
-  height: 100svh;
+  flex: 1;
+  min-height: 0;
   background-image:
-    linear-gradient(rgba(5, 5, 5, 0.7), rgba(5, 5, 5, 0.7)), url("/bg.jpeg");
+    linear-gradient(rgba(5, 5, 5, 0.65), rgba(5, 5, 5, 0.7)), url("/bg.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -3414,31 +3433,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem clamp(1rem, 4vw, 2rem);
-}
-
-@supports (height: 100dvh) {
-  .auth-section {
-    height: 100dvh;
-  }
+  padding: 2rem clamp(1rem, 4vw, 2rem);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .auth-card {
-  width: min(420px, 100%);
-  background: rgba(17, 24, 39, 0.5);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: min(420px, 95%);
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-base);
   padding: 2.5rem;
   box-shadow:
     0 12px 48px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(176, 255, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  margin: auto;
 }
 
 @media (max-width: 480px) {
+  .auth-section {
+    padding: 1.5rem 0.75rem;
+  }
+
   .auth-card {
-    padding: 2rem 1.5rem;
+    width: 95%;
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .auth-card {
+    width: 98%;
+    padding: 1.5rem 1rem;
   }
 }
 
