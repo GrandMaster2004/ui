@@ -372,12 +372,12 @@ export const LandingPage = () => {
       <div className="landing__join">
         <div className="landing__join-header">
           <div className="landing__join-header-content">
-            <img
+            {/* <img
               src="/chatgpt.png"
               alt="Join the circle community"
               className="landing__join-header-image"
               loading="lazy"
-            />
+            /> */}
             <h2 className="landing__join-title">JOIN THE CIRCLE.</h2>
           </div>
         </div>
