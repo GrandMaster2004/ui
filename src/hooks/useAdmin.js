@@ -44,6 +44,20 @@ export const useAdmin = () => {
   }, []);
 
   const updateSubmissionStatus = useCallback(async (submissionId, status) => {
+    // Store previous submissions for rollback on failure
+    let previousSubmissions = null;
+
+    // Optimistically update the UI immediately
+    setSubmissions((prev) => {
+      if (!prev) return prev;
+      previousSubmissions = prev;
+      return prev.map((sub) =>
+        sub._id === submissionId
+          ? { ...sub, submissionStatus: status }
+          : sub,
+      );
+    });
+
     try {
       const data = await apiCall(
         `/api/admin/submissions/${submissionId}/status`,
@@ -53,22 +67,28 @@ export const useAdmin = () => {
         },
       );
 
-      // Update the submission in the current list
-      setSubmissions((prev) => {
-        if (!prev) return prev;
-        return prev.map((sub) =>
-          sub._id === submissionId
-            ? {
-                ...sub,
-                submissionStatus: data.submission.submissionStatus,
-                paymentStatus: data.submission.paymentStatus,
-              }
-            : sub,
-        );
-      });
+      // If the API returns the updated submission, reconcile with server data
+      if (data?.submission) {
+        setSubmissions((prev) => {
+          if (!prev) return prev;
+          return prev.map((sub) =>
+            sub._id === submissionId
+              ? {
+                  ...sub,
+                  submissionStatus: data.submission.submissionStatus ?? status,
+                  paymentStatus: data.submission.paymentStatus ?? sub.paymentStatus,
+                }
+              : sub,
+          );
+        });
+      }
 
       return data;
     } catch (err) {
+      // Rollback to previous state on failure
+      if (previousSubmissions) {
+        setSubmissions(previousSubmissions);
+      }
       const errorMsg = err.message || "Failed to update submission status";
       throw new Error(errorMsg);
     }
